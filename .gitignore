@@ -18,6 +18,7 @@ frontend/dist/
 # Audio: large recordings stay local; small demo clips can be force-added (git add -f)
 recordings/*.wav
 recordings/*.flac
+recordings/topk_*.csv
 
 # Local machine state
 backend/calibration.json

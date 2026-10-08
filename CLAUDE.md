@@ -12,7 +12,7 @@ Solo, one-day hackathon build (Hacktoberfest Hack Day Bengaluru, IEEE RIT; track
 
 ## Progress log
 - [x] PHASE 0 — scaffold, requirements, .gitignore, LICENSE, CLAUDE.md, download_weights.py, list_devices.py (venv built, weights downloaded, committed)
-- [ ] PHASE 1 — Hearing (PANNs live)
+- [~] PHASE 1 — Hearing (PANNs live): code + tests done; WAITING for the user's guided live_topk summary to tune CATEGORIES / thresholds / gain
 - [ ] PHASE 2 — Connecting (core logic)
 - [ ] PHASE 3 — Serving
 - [ ] PHASE 4 — Dashboard
@@ -30,7 +30,13 @@ Solo, one-day hackathon build (Hacktoberfest Hack Day Bengaluru, IEEE RIT; track
   - MME #1 / DirectSound #8: flat -96.7 dBFS on all channels (dead).
   - **WDM-KS #20 "Microphone Array 2" (and #19 "Microphone Array 1")**: raw true stereo (corr ~0.73, GCC lag -1..-4 for a centred speaker). Chosen default.
   - WDM-KS is exclusive-access, and device indices shift when the Bluetooth headset (WH-XB910N) connects -> select devices by NAME substring, not index.
-  - Laptop array mic spacing is probably ~5-8 cm, not 0.20 m -> measure it; max lag shrinks to ~7-11 samples, so L/C/R margins are tight.
+  - Mic spacing MEASURED 6.5 cm -> max lag 9.1 samples @48k; CENTRE (|angle|<20 deg) = +/-3.1 samples. GCC-PHAT must
+    interpolate sub-sample (config.GCC_INTERP zero-padded IFFT + parabolic peak).
+  - 96 kHz is NOT available: WDM-KS array endpoints accept only 48 kHz (44.1/88.2/96/192k rejected). Everything stays 48k.
+  - No USB stereo mic: demo uses "Microphone Array 2" (fallback "Microphone Array 1"); user disconnects the BT headset for the demo.
+  - Quiet room on #20 ~ -56 dBFS (no AGC on the raw path) -> config.TAGGER_GAIN_DB / live_topk --gain if scores are low.
+  - live_topk --guided walks through a scripted test (segments BACKGROUND/FOOTSTEPS/IMPACT/DISTRESS/ALARM/GLASS/KNOCK/CHATTER);
+    --log writes recordings/topk_*.csv with all 527 probs per hop (git-ignored) -> read it directly when tuning.
 
 ---
 
