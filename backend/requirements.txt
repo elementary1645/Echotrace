@@ -1,0 +1,15 @@
+# torch is installed SEPARATELY first (CUDA or CPU wheel) - see README / CLAUDE.md:
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128   (NVIDIA GPU)
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu     (CPU only)
+numpy
+scipy
+sounddevice
+soundfile
+librosa
+torchlibrosa
+panns_inference
+fastapi
+uvicorn[standard]
+pydantic>=2
+websockets
+pytest
